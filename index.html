@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,user-scalable=no"/>
+<title>Hit The Ball🎯</title>
+<style type="text/css">
+*{
+	user-select:none;
+}
+html,
+body {
+    overscroll-behavior-y: contain;
+}
+body{
+	padding:0;
+	margin:0;
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f4;
+}
+canvas{
+//	position:absolute;
+	top:0;
+	left:0;
+	margin:0;
+	padding:0;
+}
+div.button{
+	border-radius:50%;
+	background:#aaa;
+	border:1px solid #333;
+}
+.button.fire{
+	position:absolute;
+	bottom:5%;
+	right:10%;
+	padding:20px;
+	width:120px;
+	height:120px;
+	background:none;
+	box-sizing:border-box;
+	border-width:12px;
+	box-shadow: 0 0 10px #fff,
+				inset 0 0 10px #fff;
+}
+.button.fire svg{
+	position:absolute;
+	width:100%;
+	height:100%;
+}
+.button.fire svg.blur{
+	filter: blur(5px);
+}
+section{
+	display:flex;
+	align-items:center;
+	justify-content:space-around;
+	flex-direction:column;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+.leaderboard-container {
+  text-align: center;
+  width: 800px;
+  max-width:80%;
+  margin-bottom:30px;
+}
+.leaderboard-title-top{
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  width:100%;
+  background: #4CAF50;
+  border-top-left-radius:10px;
+  border-top-right-radius:10px;
+  border:1px solid #fff;
+  box-sizing:border-box;
+  padding:5px;
+}
+
+.table-wrapper {
+  max-height: 200px;
+  overflow-y: scroll;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.leaderboard {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard th,
+.leaderboard td {
+  padding: 15px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.leaderboard th {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  position:sticky;
+  top:0;
+}
+.leaderboard .specialTd{
+	text-align:center;
+	vertical-align:center;
+	height:100px;
+}
+.leaderboard tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.leaderboard tr:hover {
+  background-color: #f1f1f1;
+}
+
+.leaderboard-title-bottom {
+  font-size: 0.9em;
+  color: #333;
+  background:#eee;
+  padding:5px;
+  border-bottom-left-radius:10px;
+  border-bottom-right-radius:10px;
+  box-sizing:border-box;
+  padding:5px;
+}
+
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #4CAF50;
+  border-radius: 10px;
+}
+.styledButton {
+  background-color: #4CAF50; /* Primary green color */
+  color: white; /* White text */
+  border: none; /* No borders */
+  padding: 15px 30px; /* Padding for size */
+  font-size: 1.2em; /* Text size */
+  font-weight: bold; /* Bold text */
+  border-radius: 25px; /* Rounded edges */
+  cursor: pointer; /* Pointer cursor on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+}
+
+.styledButton:hover {
+  background-color: #45a049; /* Darker green on hover */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
+}
+
+.styledButton:active {
+  background-color: #3e8e41; /* Even darker green on click */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow on click */
+  transform: translateY(2px); /* Slight button press effect */
+}
+#leaderboardSection,#gameSection{
+	display:none;
+}
+#leaderboardSection{
+	justify-content: center;
+}
+</style>
+</head>
+<body>
+<section id="homeSection">
+	<h1>Hit The Ball🎯</h1>
+	<button class="styledButton" onclick="startGame();">New Game</button>
+</section>
+<section id="gameSection">
+<canvas id="canvas"></canvas>
+<div id="fireButton" class="button fire" ontouchstart="fire()">
+	<div style="position:relative;width:100%;height:100%">
+	<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -30 542 522" xml:space="preserve" class="blur">
+		<path fill="#ffffff" d="M509.915,2.067C498.446-9.417,371.29,29.161,331.086,60.974L451.04,180.927 C482.853,140.708,521.415,13.567,509.915,2.067z"></path>
+		<path fill="#ffffff" d="M268.743,122.677l-41.344,10.328L42.211,318.208l12.047,12.063l-16.359,16.344l-12.063-12.047L0.008,360.396 l151.594,151.608l25.844-25.844l-12.063-12.063l16.359-16.359l12.063,12.047l185.188-185.171l10.344-41.359 c0,0,18.703-18.719,48.25-48.234L316.993,74.442C287.461,103.942,268.743,122.677,268.743,122.677z"></path> 
+	</svg>
+	<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -30 542 522" xml:space="preserve">
+		<path fill="#333333" d="M509.915,2.067C498.446-9.417,371.29,29.161,331.086,60.974L451.04,180.927 C482.853,140.708,521.415,13.567,509.915,2.067z"></path>
+		<path fill="#333333" d="M268.743,122.677l-41.344,10.328L42.211,318.208l12.047,12.063l-16.359,16.344l-12.063-12.047L0.008,360.396 l151.594,151.608l25.844-25.844l-12.063-12.063l16.359-16.359l12.063,12.047l185.188-185.171l10.344-41.359 c0,0,18.703-18.719,48.25-48.234L316.993,74.442C287.461,103.942,268.743,122.677,268.743,122.677z"></path> 
+	</svg>
+	</div>
+</div>
+</section>
+<section id="leaderboardSection">
+	<div class="leaderboard-container">
+		<div class="leaderboard-title-top">🏆 Leaderboard</div>
+		<div class="table-wrapper">
+			<table class="leaderboard">
+				<thead>
+					<tr>
+						<th>Player Name</th>
+						<th>Score</th>
+						<th>Misses</th>
+					</tr>
+				</thead>
+				<tbody id="tableBody">
+					<tr><td class="specialTd" colspan="3">Loading...</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="leaderboard-title-bottom">⚡ Powered by Dreamlo</div>
+	</div>
+	<button class="styledButton" onclick="startGame();">Play Again</button>
+</section>
+<script type="text/javascript">
+const c = document.getElementById("canvas");
+const ctx = c.getContext("2d");
+
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+let score = 0;
+let miss = 0;
+
+let gradient = ctx.createLinearGradient(0, -50, 0, c.height);
+gradient.addColorStop(0, '#0B486B');
+gradient.addColorStop(1, '#F56217');
+const svgInfo = [
+	{
+		name:"ball",
+		width:200,
+		height:200,
+		vw:194,
+		vh:194,
+		content:'<circle fill="#000000" cx="97" cy="97" r="97" /><path fill="#eaeaea" d="m 94,9.2 a 88,88 0 0 0 -55,21.8 l 27,0 28,-14.4 0,-7.4 z m 6,0 0,7.4 28,14.4 27,0 a 88,88 0 0 0 -55,-21.8 z m -67.2,27.8 a 88,88 0 0 0 -20,34.2 l 16,27.6 23,-3.6 21,-36.2 -8.4,-22 -31.6,0 z m 96.8,0 -8.4,22 21,36.2 23,3.6 15.8,-27.4 a 88,88 0 0 0 -19.8,-34.4 l -31.6,0 z m -50,26 -20.2,35.2 17.8,30.8 39.6,0 17.8,-30.8 -20.2,-35.2 -34.8,0 z m -68.8,16.6 a 88,88 0 0 0 -1.8,17.4 88,88 0 0 0 10.4,41.4 l 7.4,-4.4 -1.4,-29 -14.6,-25.4 z m 172.4,0.2 -14.6,25.2 -1.4,29 7.4,4.4 a 88,88 0 0 0 10.4,-41.4 88,88 0 0 0 -1.8,-17.2 z m -106,57.2 -15.4,19 L 77.2,182.6 a 88,88 0 0 0 19.8,2.4 88,88 0 0 0 19.8,-2.4 l 15.4,-26.6 -15.4,-19 -39.6,0 z m -47.8,2.6 -7,4 A 88,88 0 0 0 68.8,180.4 l -14,-24.6 -25.4,-16.2 z m 135.2,0 -25.4,16.2 -14,24.4 a 88,88 0 0 0 46.4,-36.6 l -7,-4 z"/>'
+	},{
+		name:"crosshair",
+		width:50,
+		height:50,
+		vw:16,
+		vh:16,
+		content:'<path stroke="#000" stroke-width="0.2" fill="#eeeeee" d="M7 7h2v2H7V7zm0-7h2v5H7V0zm0 11h2v5H7v-5zm4-4h5v2h-5V7zM0 7h5v2H0V7z" fill-rule="evenodd"></path>'
+	},{
+		name:"backBg",
+		width:800,
+		height:400,
+		vw:800,
+		vh:400,
+		content:'<path fill="#9DB2DC" d="M-1 105v296h800v-291s-42.25-8-50.25-12-33.875-14-37.875-15-15.938 7-23.938 11l-39.969 18s-18.984-9-25.984-10-31.992-18-36.992-17l-19.996 7s-10.998-9-17.998-8l-44.999-9s-17.999 20-20.999 20-27-4-41-8l-50-19-30 15s-36 21-40 21-40-11-44-13l-27-27s-24 14-30 16l-33-1s-32-7-52-4-57 19-62 20-33.25-6-37.25-10l-34.75 20z"/>'
+	},{
+		name:"middleBg",
+		width:800,
+		height:400,
+		vw:800,
+		vh:400,
+		content:'<path fill="#6889BF" d="M0 144v256h800v-272s-78-25-97-25-101-3-121-10-70-14-82-18l-12-4s-15 28-50 38-76 1-93-4-61-27-66-23-35 27-53 29-64-10-70-10-43 18-58 18-54-13-61-12l-37 18v19z"/>'
+	},{
+		name:"frontBg",
+		width:800,
+		height:400,
+		vw:800,
+		vh:400,
+		content:'<path fill="#2B4C80" d="M0 145v255h800v-274c-204-10-122-43-263-3s-158-2-189-3-84-19-88-19-46 23-58 26-51-2-56-3-28 19-37 15-51-18-64-15l-45 21z"/>'
+	},{
+		name:"rotatePhone",
+		width:200,
+		height:200,
+		vw:401.8,
+		vh:401.8,
+		content:'<path fill="#fff" d="M276.085,114.713c-5.326-0.698-7.535,2.075-8.233,3.318c-0.698,1.224-1.979,4.561,1.349,8.807l17.336,22.29 c4.055,4.064,10.558,4.466,15.119,0.937l21.2-16.361c2.868-2.19,3.604-4.533,3.71-6.091c0.229-3.682-2.649-6.77-7.354-7.382 l-10.404-1.329c-1.243-0.182-2.553-1.683-2.63-3.069c-1.568-30.17-14.238-58.609-35.688-80.067 c-16.103-16.104-36.347-27.339-58.541-32.532c-15.807-3.72-31.996-4.236-48.109-1.521c-30.438,5.154-57.576,21.315-76.395,45.508 c-1.578,2.037-2.792,4.905,1.052,8.75c0.708,0.708,1.645,1.54,2.697,2.362c2.343,1.817,7.765,5.996,11.207,1.587 c16.323-20.98,39.13-34.549,64.681-38.862c13.502-2.286,27.1-1.865,40.43,1.243c18.628,4.37,35.63,13.817,49.142,27.339 c17.576,17.566,28.19,40.842,29.893,65.522l-1.022,0.765L276.085,114.713z"></path><path fill="#fff" d="M359.355,207.604H206.967v26.67h134.104c3.003,0,5.432,2.438,5.432,5.441v108.229c0,3.002-2.429,5.44-5.432,5.44H206.967 v26.689h152.397c10.931,0,19.775-8.864,19.775-19.766V227.36C379.14,216.439,370.285,207.604,359.355,207.604z"></path><path fill="#fff" d="M175.42,401.856c10.911,0,19.766-8.855,19.766-19.775V128.483c0-10.93-8.865-19.775-19.766-19.775H42.473 c-10.93,0-19.756,8.855-19.756,19.775v253.598c0,10.93,8.836,19.775,19.756,19.775H175.42z M108.617,389.779 c-6.885,0-12.45-5.565-12.45-12.441c0-6.875,5.565-12.45,12.45-12.45c6.866,0,12.441,5.575,12.441,12.45 C121.048,384.214,115.473,389.779,108.617,389.779z M49.377,146.767c0-3.002,2.438-5.432,5.441-5.432h108.228 c3.003,0,5.441,2.429,5.441,5.432v195.247c0,3.003-2.438,5.432-5.441,5.432H54.828c-3.002,0-5.441-2.429-5.441-5.432V146.767 H49.377z"></path>'
+	}
+];
+const images = {};
+let prevTime = 0;
+let lastGunShotTime = Date.now();
+class Vector2 {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    // Add a scaled vector to the current vector
+    addScaledVector(vector, scale) {
+        this.x += vector.x * scale;
+        this.y += vector.y * scale;
+        return this;
+    }
+
+    // Scale the vector by a scalar
+    scale(scalarX,scalarY) {
+    	if(typeof scalarY === "undefined" || typeof scalarY === "null"){
+    		scalarY = scalarX;
+    	}
+        this.x *= scalarX;
+        this.y *= scalarY;
+        return this;
+    }
+
+    // Add another vector to this vector
+    add(vector) {
+        this.x += vector.x;
+        this.y += vector.y;
+        return this;
+    }
+
+    // Subtract another vector from this vector
+    subtract(vector) {
+        this.x -= vector.x;
+        this.y -= vector.y;
+        return this;
+    }
+
+    // Calculate the magnitude (length) of the vector
+    magnitude() {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+
+    // Return a copy of the vector
+    clone() {
+        return new Vector2(this.x, this.y);
+    }
+}
+
+
+class Ball {
+    constructor(x, y ,r, img) {
+        this.position = new Vector2(x, y);  // Position (x, y)
+        this.velocity = new Vector2(0, 0);  // Velocity (x, y)
+        this.acceleration = gravity;  // Acceleration (gravity or any constant force)
+        this.angularVelocity = 0;  // Rotation speed
+        this.angularAcceleration = 0;  // Angular acceleration (torque influence)
+        this.angle = 0;  // The current angle (rotation)
+        this.r = r;  // Radius of the ball
+        this.img = img;  // Image of the ball
+        this.mass = 1;  // For simplicity, set a mass of 1 unit
+        this.inertia = 0.5 * this.mass * this.r * this.r * 800;  // Moment of inertia for rotation
+        this.static = true;
+    }
+
+    // Draw function that rotates the ball and then draws it
+    draw(ctx) {
+        const w = c.width;
+        const h = c.height;
+        const centerX = this.position.x * w;
+        const centerY = this.position.y * h;
+
+        ctx.save();  // Save the current context state
+
+        // Move to the ball's center and rotate the context
+        ctx.translate(centerX, centerY);
+        ctx.rotate(this.angle);
+
+        // Draw the ball image, adjusting for the radius offset
+        ctx.drawImage(
+            images[this.img],
+            -this.r * w,  // Offset by radius for proper positioning
+            -this.r * w,
+            this.r * w * 2,  // Double the radius for width
+            this.r * w * 2   // Double the radius for height
+        );
+
+        ctx.restore();  // Restore the original context state
+    }
+    // Update function to move the ball and apply angular rotation
+    update(dt,walls) {
+		if(this.static){return;}
+		this.velocity.add(this.acceleration.clone().scale(dt));
+		this.position.add(this.velocity.clone().scale(dt));
+		this.velocity.scale(0.9999,1);//x-damping
+		this.angularVelocity += this.angularAcceleration*dt;
+		this.angle += this.angularVelocity*dt;
+		this.angularVelocity *= 0.95;  // Simple damping for angular velocity
+        for(let i=0;i<walls.length;i++){
+        	this.wallCollision(walls[i]);
+        }
+    }
+    // Method to apply torque (rotational force)
+    applyTorque(torque) {
+        this.angularVelocity += torque / this.inertia;
+    }
+    applyForceAtPoint(force, impactPoint) {
+    	const w = c.width;
+    	const h = c.height;
+    	// Calculate the lever arm (impactPoint - ballCenter)
+    	let leverArm = impactPoint.clone();
+    	leverArm.subtract(this.position.clone().scale(w,h));
+    
+    	// Apply the force to the ball (linear motion)
+    	this.velocity.addScaledVector(force, 1 / this.mass);
+    
+    	// Calculate the torque (leverArm × force)
+		let torque = leverArm.x * force.y - leverArm.y * force.x;  // 2D cross product
+    
+    	// Apply the torque (rotational motion)
+    	this.applyTorque(torque);
+    }
+    // Check collision with a vertical wall (only based on x-axis)
+    wallCollision(wall) {
+    	if(this.position.x + this.r >= wall.x && wall.normalX === -1 && ball.velocity.x>0){
+			this.velocity.x *= -0.7;
+		}
+		else if(this.position.x - this.r <= wall.x + wall.width && wall.normalX === 1 && ball.velocity.x<0){
+			this.velocity.x *= -0.7;
+		}
+	}  
+}
+class VerticalWall{
+	constructor(x,y,w,h,normalX){
+		this.x = x;
+		this.y = y;
+		this.width = w;
+		this.height = h;
+		this.normalX = normalX;
+	}
+	draw(ctx) {
+		const w = c.width;
+		const h = c.height;
+		const glowColor = '#00E5FF';
+		ctx.save();
+		ctx.shadowBlur = 20;
+		ctx.shadowColor = glowColor;
+		ctx.fillStyle = glowColor;
+		ctx.fillRect(this.x*w, this.y*h, this.width*w, this.height*h);
+		ctx.restore();
+	}
+}
+class Crosshair{
+	constructor(img){
+		this.position = new Vector2(0.5,0.5);
+		this.size=30;
+		this.img = img;
+		this.visible = false;
+		this.sensitivity = 1.5;
+	}
+	touchstart(v){
+		this.visible = true;
+		this.prevVector = v;
+	}
+	touchmove(v){
+		const diff = v.clone().subtract(this.prevVector).scale(1/c.width,1/c.height).scale(this.sensitivity,this.sensitivity);
+		this.position.add(diff);
+		this.prevVector = v.clone();
+	}
+	touchend(){
+		this.visible = false;
+		this.prevVector = null;
+		this.position.x = 0.5;
+		this.position.y = 0.5;
+	}
+	draw(ctx){
+		const w = c.width;
+		const h = c.height;
+		if(this.visible){
+			ctx.drawImage(images[this.img],this.position.x*w-this.size*0.5,this.position.y*h-this.size*0.5,this.size,this.size);
+		}
+	}
+}
+
+let ball;
+let crosshair;
+let gravity = new Vector2(0,2.5);
+let walls = new Array();
+
+window.addEventListener("load", function(){
+	for (let i=0;i<svgInfo.length;i++){
+		images[svgInfo[i].name] = new Image();
+		svgToImg(svgInfo[i].content,svgInfo[i].vw,svgInfo[i].vh,svgInfo[i].width,svgInfo[i].height,function(){
+			images[svgInfo[i].name] = this;
+		});
+	}
+	resize();
+});
+window.addEventListener("resize", resize);
+c.addEventListener("touchstart", function(e){
+	e.preventDefault();
+	const hand = new Vector2(e.touches[0].clientX,e.touches[0].clientY);
+	crosshair.touchstart(hand);
+},{passive:false});
+c.addEventListener("touchmove", function(e){
+	e.preventDefault();
+	const hand = new Vector2(e.touches[0].clientX,e.touches[0].clientY);
+	crosshair.touchmove(hand);
+},{passive:false});
+c.addEventListener("touchend", function(e){
+	e.preventDefault();
+	crosshair.touchend();
+},{passive:false});
+c.addEventListener("touchcancel", function(e){
+	e.preventDefault();
+	crosshair.touchend();
+},{passive:false});
+function svgToImg(svgText,vw,vh,width,height,callback,error){
+	const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	svgElement.setAttribute("width",width);
+	svgElement.setAttribute("height",height);
+	svgElement.setAttribute("viewBox","0 0 "+vw+" "+vh);
+	svgElement.innerHTML = svgText;
+
+	const svg = new XMLSerializer().serializeToString(svgElement);
+	let svg64;
+	try{svg64 = window.btoa(svg);}catch(e){error(e);}
+	const newImg = new Image();
+	newImg.onload = callback || function(){};
+	newImg.onerror = error || function(){};
+	newImg.src = "data:image/svg+xml;base64,"+svg64;
+}
+
+function resize(){
+	c.width = window.innerWidth;
+	c.height = window.innerHeight;
+	gradient = ctx.createLinearGradient(0, -50, 0, c.height);
+	gradient.addColorStop(0, '#0B486B');
+	gradient.addColorStop(1, '#F56217');
+}
+function fire(){
+	if(!crosshair.visible){return;}
+	const t = Date.now();
+	if(t - lastGunShotTime < 160){return;}
+	else{lastGunShotTime = t;}
+	generatePistolSound();
+	const w = c.width;
+	const h = c.height;
+	const circle = {x:ball.position.x*w,y:ball.position.y*h,r:ball.r*w};
+	const point = new Vector2(crosshair.position.x*w,crosshair.position.y*h);
+	if(isPointInsideCircle(point,circle)){
+		ball.static = false;
+		var force = new Vector2(Math.random()*0.6-0.3,Math.random()*(-0.8)-0.8);
+		ball.velocity.y = 0;
+		ball.applyForceAtPoint(force,point);
+		score++;
+	}else{
+		miss++;
+	}
+	
+}
+function isPointInsideCircle(p,c){
+	const distX = c.x - p.x;
+	const distY = c.y - p.y;
+	const distanceSquared = distX * distX + distY * distY;
+	const radiusSquared = c.r * c.r;
+	return distanceSquared <= radiusSquared;
+}
+function generatePistolSound() {
+	// Create a buffer for noise
+	const bufferSize = audioContext.sampleRate * 0.1; // 100ms buffer
+	const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+	const output = noiseBuffer.getChannelData(0);
+	
+	// Fill the buffer with white noise
+	for (let i = 0; i < bufferSize; i++) {
+		output[i] = Math.random() * 2 - 1; // Random values between -1 and 1
+	}
+	
+	// Create a buffer source for the noise
+	const noiseSource = audioContext.createBufferSource();
+	noiseSource.buffer = noiseBuffer;
+	
+	// Create a gain node to control volume
+	const gainNode = audioContext.createGain();
+	gainNode.gain.setValueAtTime(1, audioContext.currentTime); // Full volume
+	gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1); // Fade out in 100ms
+	
+	// Connect nodes
+	noiseSource.connect(gainNode);
+	gainNode.connect(audioContext.destination);
+	
+	// Start playback
+	noiseSource.start();
+}
+
+function fetchLeaderboard(submitted){
+	fetch("http://dreamlo.com/lb/66e1b4f88f5974020436f023/json")
+	.then(response => {
+		if (!response.ok) {
+			console.warn("Network response was not ok");
+		}
+		return response.json();
+	})
+	.then(data => {
+		const leaderboardEntries = data.dreamlo.leaderboard.entry;
+		const players = leaderboardEntries.map(player => ({
+			name: player.name,
+			score: parseInt(player.score),
+			miss: parseInt(player.seconds),
+		}));
+		console.log(JSON.stringify(players));
+		tableBody.innerHTML = "";
+		for(let i=0;i<players.length;i++){
+			addRow(players[i].name,players[i].score,players[i].miss);
+		}
+		if(submitted){return;}
+		const lowestScore = Math.min(...players.map(player => player.score));
+		if (score > lowestScore || players.length < 25) {
+			setTimeout(function(){
+				submitScore(prompt("New Highscore! Enter your name on leaderboard: ","no name"), score, miss);
+				setTimeout(function(){
+					fetchLeaderboard(true);
+				},3000);
+			},1000);
+		}
+	})
+	.catch(error => {
+		tableBody.innerHTML = '<tr><td class="specialTd" colspan="3">Error fetching leaderboard</td></tr>';
+	});
+}
+function submitScore(playerName, score, misses){
+	if(score < 0){
+		alert('Invalid score! Are you a hacker?');
+		return;
+	}
+	const apiURL = "http://dreamlo.com/lb/iBm4x-vwjUa-EHANkSyEgQo_iihOLSqUK8GNNV-T7Csg/add/"+playerName+"/"+score+"/"+misses;
+	fetch(apiURL)
+	.then(response => response.text())
+	.then(data => {
+		alert('Score submitted successfully');
+	})
+	.catch(error => {
+		alert('Error submitting score');
+	});
+}
+function checkGameOver(){
+	return ball.position.y > 1.5;
+}
+function startGame(){
+	homeSection.style.display = "none";
+	gameSection.style.display = "flex";
+	leaderboardSection.style.display = "none";
+	score=0;
+	miss=0;
+	walls=[];
+	ball = new Ball(0.5,0.5,0.04,"ball");
+	crosshair = new Crosshair("crosshair");
+	walls.push(new VerticalWall(0.15,-1,0.01,3,1));
+	walls.push(new VerticalWall(0.8,-1,0.01,3,-1));
+	prevTime = Date.now();
+	requestAnimationFrame(animate);
+}
+function GameOver(){
+	gameSection.style.display = "none";
+	leaderboardSection.style.display = "flex";
+	fetchLeaderboard(false);
+}
+function addRow(name, score, miss) {
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = "<td>"+name+"</td><td>"+score+"</td><td>"+miss+"</td>";
+  tableBody.appendChild(newRow);
+}
+function clearRows() {
+	tableBody.innerHTML = '<tr><td class="specialTd" colspan="3">Loading...</td></tr>';
+}
+
+function animate(){
+	const t = Date.now();
+	const dt = (t - prevTime)*0.001;
+	prevTime = t;
+	var crosshairPos = crosshair.position.clone().add(new Vector2(-0.5,-0.5));
+	ctx.save();
+	ctx.translate(-crosshairPos.x*70,-crosshairPos.y*70);
+	ctx.fillStyle = gradient;
+	ctx.fillRect(-100,-100,c.width+200,c.height+200);
+	ctx.globalAlpha = 0.5;
+	ctx.drawImage(images.backBg,-100+crosshairPos.x*20,c.height*0.2,c.width+200,c.height);
+	ctx.globalAlpha = 0.6;
+	ctx.drawImage(images.middleBg,-100+crosshairPos.x*30,c.height*0.4,c.width+200,c.height);
+	ctx.globalAlpha = 0.7;
+	ctx.drawImage(images.frontBg,-100+crosshairPos.x*60,c.height*0.6,c.width+200,c.height);
+	ctx.globalAlpha = 1.0;
+	for(let i=0;i<walls.length;i++){
+		walls[i].draw(ctx);
+	}
+	ball.draw(ctx);
+	ball.update(dt,walls);
+	crosshair.draw(ctx);
+	ctx.restore();
+	ctx.font ="900 25px Arial";
+	ctx.fillStyle = "#fff";
+	ctx.fillText("Score: "+score, 10, 30);
+	ctx.fillText("Miss: "+miss, 10, 60);
+	ctx.strokeText("Score: "+score, 10, 30);
+	ctx.strokeText("Miss: "+miss, 10, 60);
+	if(checkGameOver()){
+		cancelAnimationFrame(animate);
+		GameOver();
+		return;
+	}
+	if(c.width<c.height){
+		ctx.fillStyle = "rgba(0,0,0,0.9)";
+		ctx.fillRect(-100,-100,c.width+200,c.height+200);
+		ctx.drawImage(images.rotatePhone,c.width*0.5-100,c.height*0.5-100,200,200);
+		fireButton.style.display = "none";
+	}else{
+		fireButton.style.display = "block";
+	}
+	requestAnimationFrame(animate);
+}
+</script>
+</body>
+</html>
