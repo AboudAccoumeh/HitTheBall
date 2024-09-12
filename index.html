@@ -610,10 +610,10 @@ function fetchLeaderboard(submitted){
 				},500);
 			},500);
 		}
-	})
-	.catch(error => {
-		tableBody.innerHTML = '<tr><td class="specialTd" colspan="3">Error fetching leaderboard'+error+" "+error.stack+'</td></tr>';
 	});
+	/*.catch(error => {
+		tableBody.innerHTML = '<tr><td class="specialTd" colspan="3">Error fetching leaderboard'+error+" "+error.stack+'</td></tr>';
+	});*/
 }
 function submitScore(playerName, score, misses){
 	if(score < 0){
