@@ -533,7 +533,7 @@ function fire(){
 		ball.velocity.y = 0;
 		ball.applyForceAtPoint(force,point);
 		score++;
-		ball.r = Math.max(0.04 - Math.floor(score/10)*0.002,0.02);
+		ball.r = Math.max(0.05 - Math.floor(score/1)*0.002,0.02);
 	}else{
 		miss++;
 	}
@@ -575,7 +575,7 @@ function generatePistolSound() {
 }
 
 function fetchLeaderboard(submitted){
-	fetch("http://dreamlo.com/lb/66e1b4f88f5974020436f023/json")
+	fetch("https://corsproxy.io/?"+encodeURIComponent("http://dreamlo.com/lb/66e1b4f88f5974020436f023/json"))
 	.then(response => {
 		if (!response.ok) {
 			console.warn("Network response was not ok");
@@ -595,115 +595,4 @@ function fetchLeaderboard(submitted){
 			miss: Math.abs(parseInt(player.seconds))-1000,
 		}));
 		tableBody.innerHTML = "";
-		for(let i=0;i<players.length;i++){
-			addRow(players[i].name,players[i].score,players[i].miss);
-		}
-		if(submitted){return;}
-		const lowestScore = Math.min(...players.map(player => player.score));
-		if (score > lowestScore || players.length < 25) {
-			setTimeout(function(){
-				submitScore(name , score, -miss-1000);
-				setTimeout(function(){
-					fetchLeaderboard(true);
-					if(leaderboardSection.style.display != "none"){alert("New HighScore! Your score is now on the leaderboard!");}
-				},500);
-			},500);
-		}
-	})
-	.catch(error => {
-		tableBody.innerHTML = '<tr><td class="specialTd" colspan="3">Error fetching leaderboard'+error+" "+error.stack+'</td></tr>';
-	});
-}
-function submitScore(playerName, score, misses){
-	if(score < 0){
-		console.log('Invalid score! Are you a hacker?');
-		return;
-	}
-	const apiURL = "http://dreamlo.com/lb/iBm4x-vwjUa-EHANkSyEgQo_iihOLSqUK8GNNV-T7Csg/add/"+playerName+"/"+score+"/"+misses;
-	fetch(apiURL)
-	.then(response => response.text())
-	.then(data => {
-		console.log('Score submitted successfully');
-	})
-	.catch(error => {
-		console.log('Error submitting score');
-	});
-}
-function checkGameOver(){
-	return ball.position.y > 1.5;
-}
-function startGame(){
-	homeSection.style.display = "none";
-	gameSection.style.display = "flex";
-	leaderboardSection.style.display = "none";
-	score=0;
-	miss=0;
-	walls=[];
-	ball = new Ball(0.5,0.5,0.04,"ball");
-	crosshair = new Crosshair("crosshair");
-	walls.push(new VerticalWall(0.15,-1,0.01,3,1));
-	walls.push(new VerticalWall(0.8,-1,0.01,3,-1));
-	prevTime = Date.now();
-	requestAnimationFrame(animate);
-}
-function GameOver(){
-	gameSection.style.display = "none";
-	leaderboardSection.style.display = "flex";
-	fetchLeaderboard(false);
-}
-function addRow(name, score, miss) {
-  const newRow = document.createElement('tr');
-  newRow.innerHTML = "<td>"+name+"</td><td>"+score+"</td><td>"+miss+"</td>";
-  tableBody.appendChild(newRow);
-}
-function clearRows() {
-	tableBody.innerHTML = '<tr><td class="specialTd" colspan="3">Loading...</td></tr>';
-}
-
-function animate(){
-	const t = Date.now();
-	const dt = (t - prevTime)*0.001;
-	prevTime = t;
-	const crosshairPos = crosshair.position.clone().add(new Vector2(-0.5,-0.5));
-	ctx.save();
-	ctx.translate(-crosshairPos.x*70,-crosshairPos.y*70);
-	ctx.fillStyle = gradient;
-	ctx.fillRect(-100,-100,c.width+200,c.height+200);
-	ctx.globalAlpha = 0.5;
-	ctx.drawImage(images.backBg,-100+crosshairPos.x*20,c.height*0.2,c.width+200,c.height);
-	ctx.globalAlpha = 0.6;
-	ctx.drawImage(images.middleBg,-100+crosshairPos.x*30,c.height*0.4,c.width+200,c.height);
-	ctx.globalAlpha = 0.7;
-	ctx.drawImage(images.frontBg,-100+crosshairPos.x*60,c.height*0.6,c.width+200,c.height);
-	ctx.globalAlpha = 1.0;
-	for(let i=0;i<walls.length;i++){
-		walls[i].draw(ctx);
-	}
-	ball.draw(ctx);
-	ball.update(dt,walls);
-	crosshair.draw(ctx);
-	ctx.restore();
-	ctx.font ="900 25px Arial";
-	ctx.fillStyle = "#fff";
-	ctx.fillText("Score: "+score, 10, 30);
-	ctx.fillText("Miss: "+miss, 10, 60);
-	ctx.strokeText("Score: "+score, 10, 30);
-	ctx.strokeText("Miss: "+miss, 10, 60);
-	if(checkGameOver()){
-		cancelAnimationFrame(animate);
-		GameOver();
-		return;
-	}
-	if(c.width<c.height){
-		ctx.fillStyle = "rgba(0,0,0,0.9)";
-		ctx.fillRect(-100,-100,c.width+200,c.height+200);
-		ctx.drawImage(images.rotatePhone,c.width*0.5-100,c.height*0.5-100,200,200);
-		fireButton.style.display = "none";
-	}else{
-		fireButton.style.display = "block";
-	}
-	requestAnimationFrame(animate);
-}
-</script>
-</body>
-</html>
+		for(let i
