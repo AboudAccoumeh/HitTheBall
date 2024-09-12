@@ -575,7 +575,7 @@ function generatePistolSound() {
 }
 
 function fetchLeaderboard(submitted){
-	fetch("https://thingproxy.freeboard.io/fetch/http://dreamlo.com/lb/66e1b4f88f5974020436f023/json")
+	fetch("https://thingproxy.freeboard.io/fetch/"+encodeURIComponent("http://dreamlo.com/lb/66e1b4f88f5974020436f023/json"))
 	.then(response => {
 		if (!response.ok) {
 			console.warn("Network response was not ok");
@@ -619,7 +619,7 @@ function submitScore(playerName, score, misses){
 		console.log('Invalid score! Are you a hacker?');
 		return;
 	}
-	const apiURL = "https://thingproxy.freeboard.io/fetch/http://dreamlo.com/lb/iBm4x-vwjUa-EHANkSyEgQo_iihOLSqUK8GNNV-T7Csg/add/"+playerName+"/"+score+"/"+misses;
+	const apiURL = "https://thingproxy.freeboard.io/fetch/"+encodeURIComponent("http://dreamlo.com/lb/iBm4x-vwjUa-EHANkSyEgQo_iihOLSqUK8GNNV-T7Csg/add/"+playerName+"/"+score+"/"+misses);
 	fetch(apiURL)
 	.then(response => response.text())
 	.then(data => {
