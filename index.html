@@ -456,8 +456,9 @@ class Crosshair{
 
 let ball;
 let crosshair;
-let gravity = new Vector2(0,2.5);
+let gravity = new Vector2(0,3.5);
 let walls = new Array();
+let name;
 
 window.addEventListener("load", function(){
 	for (let i=0;i<svgInfo.length;i++){
@@ -465,6 +466,12 @@ window.addEventListener("load", function(){
 		svgToImg(svgInfo[i].content,svgInfo[i].vw,svgInfo[i].vh,svgInfo[i].width,svgInfo[i].height,function(){
 			images[svgInfo[i].name] = this;
 		});
+		name = localStorage.getItem("hitTheBallName");
+		const regex = /^[A-Za-z]+$/;
+		while(!name || !regex.test(name) || name.length < 3 || name.length > 25){
+			name = prompt("Enter your name using A-Z characters.\nUse unique name to guarantee your name appear in the leaderboard.\n-Min:3 characters.\n-Max:25 characters.");
+		}
+		localStorage.setItem("hitTheBallName",name);
 	}
 	resize();
 });
@@ -522,10 +529,11 @@ function fire(){
 	const point = new Vector2(crosshair.position.x*w,crosshair.position.y*h);
 	if(isPointInsideCircle(point,circle)){
 		ball.static = false;
-		var force = new Vector2(Math.random()*0.6-0.3,Math.random()*(-0.8)-0.8);
+		const force = new Vector2(Math.random()*0.6-0.3,Math.random()*(-1.2)-0.8);
 		ball.velocity.y = 0;
 		ball.applyForceAtPoint(force,point);
 		score++;
+		ball.r = Math.max(0.04 - Math.floor(score/10)*0.002,0.02);
 	}else{
 		miss++;
 	}
@@ -575,13 +583,17 @@ function fetchLeaderboard(submitted){
 		return response.json();
 	})
 	.then(data => {
+		if(data.dreamlo.leaderboard == null){
+			data.dreamlo.leaderboard = {entry:[]};
+		}else if(!Array.isArray(data.dreamlo.leaderboard.entry)){
+			data.dreamlo.leaderboard.entry = [data.dreamlo.leaderboard.entry];
+		}
 		const leaderboardEntries = data.dreamlo.leaderboard.entry;
 		const players = leaderboardEntries.map(player => ({
 			name: player.name,
 			score: parseInt(player.score),
-			miss: parseInt(player.seconds),
+			miss: Math.abs(parseInt(player.seconds))-1000,
 		}));
-		console.log(JSON.stringify(players));
 		tableBody.innerHTML = "";
 		for(let i=0;i<players.length;i++){
 			addRow(players[i].name,players[i].score,players[i].miss);
@@ -590,30 +602,31 @@ function fetchLeaderboard(submitted){
 		const lowestScore = Math.min(...players.map(player => player.score));
 		if (score > lowestScore || players.length < 25) {
 			setTimeout(function(){
-				submitScore(prompt("New Highscore! Enter your name on leaderboard: ","no name"), score, miss);
+				submitScore(name , score, -miss-1000);
 				setTimeout(function(){
 					fetchLeaderboard(true);
-				},3000);
-			},1000);
+					if(leaderboardSection.style.display != "none"){alert("New HighScore! Your score is now on the leaderboard!");}
+				},500);
+			},500);
 		}
 	})
 	.catch(error => {
-		tableBody.innerHTML = '<tr><td class="specialTd" colspan="3">Error fetching leaderboard</td></tr>';
+		tableBody.innerHTML = '<tr><td class="specialTd" colspan="3">Error fetching leaderboard'+error+" "+error.stack+'</td></tr>';
 	});
 }
 function submitScore(playerName, score, misses){
 	if(score < 0){
-		alert('Invalid score! Are you a hacker?');
+		console.log('Invalid score! Are you a hacker?');
 		return;
 	}
 	const apiURL = "http://dreamlo.com/lb/iBm4x-vwjUa-EHANkSyEgQo_iihOLSqUK8GNNV-T7Csg/add/"+playerName+"/"+score+"/"+misses;
 	fetch(apiURL)
 	.then(response => response.text())
 	.then(data => {
-		alert('Score submitted successfully');
+		console.log('Score submitted successfully');
 	})
 	.catch(error => {
-		alert('Error submitting score');
+		console.log('Error submitting score');
 	});
 }
 function checkGameOver(){
@@ -651,7 +664,7 @@ function animate(){
 	const t = Date.now();
 	const dt = (t - prevTime)*0.001;
 	prevTime = t;
-	var crosshairPos = crosshair.position.clone().add(new Vector2(-0.5,-0.5));
+	const crosshairPos = crosshair.position.clone().add(new Vector2(-0.5,-0.5));
 	ctx.save();
 	ctx.translate(-crosshairPos.x*70,-crosshairPos.y*70);
 	ctx.fillStyle = gradient;
