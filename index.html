@@ -533,7 +533,7 @@ function fire(){
 		ball.velocity.y = 0;
 		ball.applyForceAtPoint(force,point);
 		score++;
-		ball.r = Math.max(0.05 - Math.floor(score/1)*0.002,0.02);
+		ball.r = Math.max(0.05 - Math.floor(score/10)*0.002,0.02);
 	}else{
 		miss++;
 	}
