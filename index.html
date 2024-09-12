@@ -583,6 +583,7 @@ function fetchLeaderboard(submitted){
 		return response.json();
 	})
 	.then(data => {
+		alert(JSON.stringify(data));
 		if(data.dreamlo.leaderboard == null){
 			data.dreamlo.leaderboard = {entry:[]};
 		}else if(!Array.isArray(data.dreamlo.leaderboard.entry)){
