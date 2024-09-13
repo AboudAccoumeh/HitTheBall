@@ -19,7 +19,7 @@ body{
 	background-color: #f4f4f4;
 }
 canvas{
-//	position:absolute;
+	position:absolute;
 	top:0;
 	left:0;
 	margin:0;
@@ -173,7 +173,7 @@ section{
 <body>
 <section id="homeSection">
 	<h1>Hit The Ball🎯</h1>
-	<button class="styledButton" onclick="startGame();">New Game</button>
+	<button class="styledButton" onclick="fullscreen();startGame();">New Game</button>
 </section>
 <section id="gameSection">
 <canvas id="canvas"></canvas>
@@ -192,6 +192,7 @@ section{
 </section>
 <section id="leaderboardSection">
 	<div class="leaderboard-container">
+		<p id="scoreElement">Your score is: 0</p>
 		<div class="leaderboard-title-top">🏆 Leaderboard</div>
 		<div class="table-wrapper">
 			<table class="leaderboard">
@@ -209,7 +210,7 @@ section{
 		</div>
 		<div class="leaderboard-title-bottom">⚡ Powered by Dreamlo</div>
 	</div>
-	<button class="styledButton" onclick="startGame();">Play Again</button>
+	<button class="styledButton" onclick="fullscreen();startGame();">Play Again</button>
 </section>
 <script type="text/javascript">
 const c = document.getElementById("canvas");
@@ -663,6 +664,7 @@ function startGame(){
 function GameOver(){
 	gameSection.style.display = "none";
 	leaderboardSection.style.display = "flex";
+	scoreElement.innerText = "Your score is: "+score;
 	fetchLeaderboard(false);
 }
 function addRow(name, score, miss) {
@@ -673,7 +675,14 @@ function addRow(name, score, miss) {
 function clearRows() {
 	tableBody.innerHTML = '<tr><td class="specialTd" colspan="3">Loading...</td></tr>';
 }
-
+function fullscreen(){
+	if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement){
+		document.documentElement.requestFullscreen = document.documentElement.requestFullscreen || document.documentElement.mozRequestFullscreen || document.documentElement.webkitRequestFullscreen;
+		if(document.documentElement.requestFullscreen){
+			document.documentElement.requestFullscreen();
+		}
+	}
+}
 function animate(){
 	const t = Date.now();
 	const dt = (t - prevTime)*0.001;
