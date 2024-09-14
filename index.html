@@ -237,7 +237,7 @@ gradient.addColorStop(1, '#F56217');
 const manifest = {
 	"name": "Hit The Ball🎯",
 	"short_name": "Hit the Ball🎯",
-	"start_url": "/storage/emulated/0/!html/hitTheBall.html/?fullscreen=true",
+	"start_url": "/?fullscreen=true",
 	"display": "standalone",
 	"background_color": "#ffffff",
 	"theme_color": "#000000",
@@ -585,7 +585,7 @@ function initiateServiceWorker(){
 	if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register('data:application/javascript;base64,'+btoa(`
 				const CACHE_NAME = 'hitTheBall-cache-v1';
-				const URL_TO_CACHE = '/storage/emulated/0/!html/hitTheBall.html';
+				const URL_TO_CACHE = '/';
 				self.addEventListener('install', (event) => {
 					event.waitUntil(caches.open(CACHE_NAME).then((cache) => {
 						return cache.addAll([URL_TO_CACHE]);
