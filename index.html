@@ -6,6 +6,8 @@
 <meta name="apple-mobile-web-app-title" content="Hit The Ball🎯"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<script src="https://cdn.jsdelivr.net/gh/philfung/add-to-homescreen@2.0/dist/add-to-homescreen.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/philfung/add-to-homescreen@2.0/dist/add-to-homescreen.min.css">
 <title>Hit The Ball🎯</title>
 <style type="text/css">
 *{
@@ -216,6 +218,13 @@ section{
 	<button class="styledButton" onclick="fullscreen();startGame();">Play Again</button>
 </section>
 <script type="text/javascript">
+
+
+// ret = window.AddToHomeScreenInstance.show('en');        // show "add-to-homescreen" instructions to user, or do nothing if already added to homescreen
+                                                         // The only argument is the language to show the messages in (currently only 'de', 'en', 'pt' and 'fr' are available).
+
+</script>
+<script type="text/javascript">
 const c = document.getElementById("canvas");
 const ctx = c.getContext("2d");
 
@@ -228,7 +237,7 @@ let lives = 2;
 const gameIcon = {
 	vw:200,
 	vh:200,
-	content:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="backgroundGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0B486B"/><stop offset="100%" stop-color="#F56217"/></linearGradient><symbol id="ball" viewBox="0 0 194 194"><circle fill="#000000" cx="97" cy="97" r="97"/><path fill="#eaeaea" d="m 94,9.2 a 88,88 0 0 0 -55,21.8 l 27,0 28,-14.4 0,-7.4 z m 6,0 0,7.4 28,14.4 27,0 a 88,88 0 0 0 -55,-21.8 z m -67.2,27.8 a 88,88 0 0 0 -20,34.2 l 16,27.6 23,-3.6 21,-36.2 -8.4,-22 -31.6,0 z m 96.8,0 -8.4,22 21,36.2 23,3.6 15.8,-27.4 a 88,88 0 0 0 -19.8,-34.4 l -31.6,0 z m -50,26 -20.2,35.2 17.8,30.8 39.6,0 17.8,-30.8 -20.2,-35.2 -34.8,0 z m -68.8,16.6 a 88,88 0 0 0 -1.8,17.4 88,88 0 0 0 10.4,41.4 l 7.4,-4.4 -1.4,-29 -14.6,-25.4 z m 172.4,0.2 -14.6,25.2 -1.4,29 7.4,4.4 a 88,88 0 0 0 10.4,-41.4 88,88 0 0 0 -1.8,-17.2 z m -106,57.2 -15.4,19 L 77.2,182.6 a 88,88 0 0 0 19.8,2.4 88,88 0 0 0 19.8,-2.4 l 15.4,-26.6 -15.4,-19 -39.6,0 z m -47.8,2.6 -7,4 A 88,88 0 0 0 68.8,180.4 l -14,-24.6 -25.4,-16.2 z m 135.2,0 -25.4,16.2 -14,24.4 a 88,88 0 0 0 46.4,-36.6 l -7,-4 z"/></symbol><symbol id="crosshair" viewBox="0 0 16 16"><path stroke="#000" stroke-width="0.2" fill="#eeeeee" d="M7 7h2v2H7V7zm0-7h2v5H7V0zm0 11h2v5H7v-5zm4-4h5v2h-5V7zM0 7h5v2H0V7z" fill-rule="evenodd"/></symbol></defs><rect x="0" y="0" width="200" height="200" rx="20" ry="20" fill="url(#backgroundGradient)"/><use href="#ball" x="20" y="20" width="120" height="120"/><use href="#crosshair" x="135" y="135" width="20" height="20"/></svg>'
+	content:'<defs><linearGradient id="backgroundGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0B486B"/><stop offset="100%" stop-color="#F56217"/></linearGradient><symbol id="ball" viewBox="0 0 194 194"><circle fill="#000000" cx="97" cy="97" r="97"/><path fill="#eaeaea" d="m 94,9.2 a 88,88 0 0 0 -55,21.8 l 27,0 28,-14.4 0,-7.4 z m 6,0 0,7.4 28,14.4 27,0 a 88,88 0 0 0 -55,-21.8 z m -67.2,27.8 a 88,88 0 0 0 -20,34.2 l 16,27.6 23,-3.6 21,-36.2 -8.4,-22 -31.6,0 z m 96.8,0 -8.4,22 21,36.2 23,3.6 15.8,-27.4 a 88,88 0 0 0 -19.8,-34.4 l -31.6,0 z m -50,26 -20.2,35.2 17.8,30.8 39.6,0 17.8,-30.8 -20.2,-35.2 -34.8,0 z m -68.8,16.6 a 88,88 0 0 0 -1.8,17.4 88,88 0 0 0 10.4,41.4 l 7.4,-4.4 -1.4,-29 -14.6,-25.4 z m 172.4,0.2 -14.6,25.2 -1.4,29 7.4,4.4 a 88,88 0 0 0 10.4,-41.4 88,88 0 0 0 -1.8,-17.2 z m -106,57.2 -15.4,19 L 77.2,182.6 a 88,88 0 0 0 19.8,2.4 88,88 0 0 0 19.8,-2.4 l 15.4,-26.6 -15.4,-19 -39.6,0 z m -47.8,2.6 -7,4 A 88,88 0 0 0 68.8,180.4 l -14,-24.6 -25.4,-16.2 z m 135.2,0 -25.4,16.2 -14,24.4 a 88,88 0 0 0 46.4,-36.6 l -7,-4 z"/></symbol><symbol id="crosshair" viewBox="0 0 16 16"><path stroke="#000" stroke-width="0.2" fill="#eeeeee" d="M7 7h2v2H7V7zm0-7h2v5H7V0zm0 11h2v5H7v-5zm4-4h5v2h-5V7zM0 7h5v2H0V7z" fill-rule="evenodd"/></symbol></defs><rect x="0" y="0" width="200" height="200" rx="20" ry="20" fill="url(#backgroundGradient)"/><use href="#ball" x="20" y="20" width="120" height="120"/><use href="#crosshair" x="125" y="125" width="50" height="50"/>'
 }
 
 let gradient = ctx.createLinearGradient(0, -50, 0, c.height);
@@ -237,7 +246,7 @@ gradient.addColorStop(1, '#F56217');
 const manifest = {
 	"name": "Hit The Ball🎯",
 	"short_name": "Hit the Ball🎯",
-	"start_url": "/?fullscreen=true",
+	"start_url": "/storage/emulated/0/!html/hitTheBall.html/?fullscreen=true",
 	"display": "standalone",
 	"background_color": "#ffffff",
 	"theme_color": "#000000",
@@ -506,9 +515,16 @@ window.addEventListener("load", function(){
 			generatePng(this, 152, 152, addAppIcon);  // 152x152 for iPad Retina
 			generatePng(this, 180, 180, addAppIcon);  // 180x180 for iPhone Retina HD
 			generatePng(this, 192, 192, function(pngUrl){
-				initiateServiceWorker();
+				//initiateServiceWorker();
 				manifest.icons[0].src = pngUrl;
 				addManifest();
+				window.AddToHomeScreenInstance = new window.AddToHomeScreen({
+					appName: 'Hit The Ball🎯',
+					appIconUrl: pngUrl,
+					assetUrl: 'https://cdn.jsdelivr.net/gh/philfung/add-to-homescreen@2.0/dist/assets/img/',
+					maxModalDisplayCount: -1 
+				});
+				window.AddToHomeScreenInstance.show('en');
 			});
 		},function (e) {
 		console.error("Error generating icon image: ", e);
@@ -585,7 +601,7 @@ function initiateServiceWorker(){
 	if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register('data:application/javascript;base64,'+btoa(`
 				const CACHE_NAME = 'hitTheBall-cache-v1';
-				const URL_TO_CACHE = '/';
+				const URL_TO_CACHE = '/storage/emulated/0/!html/hitTheBall.html';
 				self.addEventListener('install', (event) => {
 					event.waitUntil(caches.open(CACHE_NAME).then((cache) => {
 						return cache.addAll([URL_TO_CACHE]);
