@@ -518,13 +518,13 @@ window.addEventListener("load", function(){
 				//initiateServiceWorker();
 				manifest.icons[0].src = pngUrl;
 				addManifest();
-				window.AddToHomeScreenInstance = new window.AddToHomeScreen({
+				/*window.AddToHomeScreenInstance = new window.AddToHomeScreen({
 					appName: 'Hit The Ball🎯',
 					appIconUrl: pngUrl,
 					assetUrl: 'https://cdn.jsdelivr.net/gh/philfung/add-to-homescreen@2.0/dist/assets/img/',
 					maxModalDisplayCount: -1 
 				});
-				window.AddToHomeScreenInstance.show('en');
+				window.AddToHomeScreenInstance.show('en');*/
 			});
 		},function (e) {
 		console.error("Error generating icon image: ", e);
