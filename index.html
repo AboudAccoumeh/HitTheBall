@@ -599,21 +599,41 @@ function addManifest(){
 }
 function initiateServiceWorker(){
 	if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.register('data:application/javascript;base64,'+btoa(`
-				const CACHE_NAME = 'hitTheBall-cache-v1';
-				const URL_TO_CACHE = '/storage/emulated/0/!html/hitTheBall.html';
-				self.addEventListener('install', (event) => {
-					event.waitUntil(caches.open(CACHE_NAME).then((cache) => {
-						return cache.addAll([URL_TO_CACHE]);
-					})
-				);});
-				self.addEventListener('fetch', (event) => {
-					event.respondWith(caches.match(event.request).then((response) => {
-						return response || fetch(event.request);
-					})
-				);});
-		`));///
+	    const swCode = `
+		const CACHE_NAME = 'hitTheBall-cache-v1';
+		const URLS_TO_CACHE = [
+		    '/',
+		];
+	
+		self.addEventListener('install', (event) => {
+		    event.waitUntil(
+			caches.open(CACHE_NAME).then((cache) => {
+			    return cache.addAll(URLS_TO_CACHE);
+			})
+		    );
+		});
+	
+		self.addEventListener('fetch', (event) => {
+		    event.respondWith(
+			caches.match(event.request).then((response) => {
+			    return response || fetch(event.request);
+			})
+		    );
+		});
+	    `;
+	
+	    const blob = new Blob([swCode], { type: 'application/javascript' });
+	    const blobURL = URL.createObjectURL(blob);
+	
+	    navigator.serviceWorker.register(blobURL)
+		.then((registration) => {
+		    console.log('Service Worker registered with scope:', registration.scope);
+		})
+		.catch((error) => {
+		    console.error('Service Worker registration failed:', error);
+		});
 	}
+
 }
 function resize(){
 	c.width = window.innerWidth;
