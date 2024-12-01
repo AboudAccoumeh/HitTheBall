@@ -515,7 +515,7 @@ window.addEventListener("load", function(){
 			generatePng(this, 152, 152, addAppIcon);  // 152x152 for iPad Retina
 			generatePng(this, 180, 180, addAppIcon);  // 180x180 for iPhone Retina HD
 			generatePng(this, 192, 192, function(pngUrl){
-				//initiateServiceWorker();
+				initiateServiceWorker();
 				manifest.icons[0].src = pngUrl;
 				addManifest();
 				/*window.AddToHomeScreenInstance = new window.AddToHomeScreen({
