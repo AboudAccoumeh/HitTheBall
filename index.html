@@ -488,6 +488,10 @@ class Crosshair{
 		this.position.x = 0.5;
 		this.position.y = 0.5;
 	}
+	mousemove(v){
+		const position = v.clone().scale(1/c.width,1/c.height);
+		this.position.add(position);
+	}
 	draw(ctx){
 		const w = c.width;
 		const h = c.height;
@@ -557,6 +561,11 @@ c.addEventListener("touchcancel", function(e){
 	e.preventDefault();
 	crosshair.touchend();
 },{passive:false});
+c.addEventListener("mousemove", function(e){
+	const hand = new Vector2(e.clientX,e.clientY);
+	crosshair.mousemove(hand);
+});
+c.addEventListener("mousedown", fire);
 function svgToImg(svgText,vw,vh,width,height,callback,error){
 	const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 	svgElement.setAttribute("width",width);
