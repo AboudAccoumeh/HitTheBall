@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-title" content="Hit The Ball🎯"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <!--script src="https://cdn.jsdelivr.net/gh/philfung/add-to-homescreen@2.0/dist/add-to-homescreen.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/philfung/add-to-homescreen@2.0/dist/add-to-homescreen.min.css"-->
@@ -246,7 +247,7 @@ gradient.addColorStop(1, '#F56217');
 const manifest = {
 	"name": "Hit The Ball🎯",
 	"short_name": "Hit the Ball🎯",
-	"start_url": "/storage/emulated/0/!html/hitTheBall.html/?fullscreen=true",
+	"start_url": "/?fullscreen=true",
 	"display": "standalone",
 	"background_color": "#ffffff",
 	"theme_color": "#000000",
@@ -489,8 +490,9 @@ class Crosshair{
 		this.position.y = 0.5;
 	}
 	mousemove(v){
+		this.visible = true;
 		const position = v.clone().scale(1/c.width,1/c.height);
-		this.position.add(position);
+		this.position = position;
 	}
 	draw(ctx){
 		const w = c.width;
